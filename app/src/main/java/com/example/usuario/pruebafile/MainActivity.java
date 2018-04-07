@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -49,15 +50,7 @@ public class MainActivity extends AppCompatActivity {
         aSwitch = findViewById(R.id.switch1);
 
         leerSD = aSwitch.isChecked();
-        if (leerSD) {
-            bl.setText("Leer de SD");
-            bg.setText("Guardar en SD");
-            tv.setText("Origen SD");
-        } else {
-            bl.setText("Leer de MI");
-            bg.setText("Guardar en MI");
-            tv.setText("Origen MI");
-        }
+        cambioBotones();
         bl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
                     msg = ruta_sd_global.getAbsolutePath() + "/" + TEXTARCH;
                 } else {
                     escrito = escribirMI(et.getText().toString());
-                    msg = "Memori Interna/" + TEXTARCH;
+                    msg = "Memoria Interna/" + TEXTARCH;
                 }
                 if (escrito) {
                     msgstatus = "Archivo guardado con exito en \n" + msg;
@@ -87,6 +80,14 @@ public class MainActivity extends AppCompatActivity {
                     msgstatus = "Error al guardar el archivo en \n" + msg;
                 }
                 Toast.makeText(getApplicationContext(), msgstatus, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                leerSD=isChecked;
+                cambioBotones();
             }
         });
 
@@ -98,6 +99,20 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+    }
+
+    private void cambioBotones() {
+        if (leerSD) {
+            bl.setText("Leer de SD");
+            bg.setText("Guardar en SD");
+            tv.setText("Origen SD");
+            aSwitch.setText("Guardar en SD");
+        } else {
+            bl.setText("Leer de MI");
+            bg.setText("Guardar en MI");
+            tv.setText("Origen MI");
+            aSwitch.setText("Guardar en MI");
+        }
     }
 
     @Override
