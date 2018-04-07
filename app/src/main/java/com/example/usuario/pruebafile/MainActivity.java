@@ -106,12 +106,12 @@ public class MainActivity extends AppCompatActivity {
             bl.setText("Leer de SD");
             bg.setText("Guardar en SD");
             tv.setText("Origen SD");
-            aSwitch.setText("Guardar en SD");
+            //aSwitch.setText("Guardar en SD");
         } else {
             bl.setText("Leer de MI");
             bg.setText("Guardar en MI");
             tv.setText("Origen MI");
-            aSwitch.setText("Guardar en MI");
+            //aSwitch.setText("Guardar en MI");
         }
     }
 

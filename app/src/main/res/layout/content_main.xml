@@ -32,9 +32,10 @@
             android:id="@+id/switch1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:showText="true"
             android:text="Guardar en"
-            android:textOff="Memoria Interna"
-            android:textOn="Memoria SD" />
+            android:textOff="MI"
+            android:textOn=" SD" />
 
         <Button
             android:id="@+id/buttonLeer"
