@@ -1,6 +1,7 @@
 package com.example.usuario.pruebafile;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
@@ -131,6 +132,12 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            return true;
+        }
+
+        if (id == R.id.action_picture) {
+            Intent i=new Intent(this,PictureActivity.class);
+            startActivity(i);
             return true;
         }
 
