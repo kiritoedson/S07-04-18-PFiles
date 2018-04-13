@@ -1,11 +1,17 @@
 package com.example.usuario.pruebafile;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -40,19 +46,30 @@ public class PictureActivity extends AppCompatActivity {
     //private static File mFilename = null;
     private List<String> items;
 
+    private String [] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.CAMERA};
+
+    private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 1 ;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_picture);
 
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+            }
+        }
+
         b = findViewById(R.id.button);
         imageView = findViewById(R.id.imageView2);
         listView = findViewById(R.id.listView);
 
+        loadList();
 
-        if (folder.mkdirs()) {
-            loadList();
-        }
+
 
         b.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,7 +90,22 @@ public class PictureActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Error al tomar la Foto", Toast.LENGTH_SHORT).show();
             }
         } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+    }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode,String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                } else {
+                    //finish();
+                }
+                return;
+            }
         }
     }
 
@@ -83,6 +115,8 @@ public class PictureActivity extends AppCompatActivity {
             Bitmap bm = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
             imageView.setImageBitmap(bm);
         }
+        Bitmap bm = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+        imageView.setImageBitmap(bm);
     }
 
     private void loadList() {
@@ -112,21 +146,33 @@ public class PictureActivity extends AppCompatActivity {
         });
     }
 
-    private void takePicture() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHMMSS");
+    private void takePicture(){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddhhmmss");
         String pictureName = PREFIJO + dateFormat.format(new Date());
         filepath = Folder_pictures + pictureName + ".jpg";
+        Log.i(FOTOS, filepath);
         File myPicture = new File(filepath);
-        try {
-            Log.i("Imagen",myPicture.toString());
+
+        try{
             myPicture.createNewFile();
             Log.i("PICTURE", filepath);
-            Uri uri = Uri.fromFile(myPicture);
             Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            i.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                // versiones con android 6.0 o superior
+                Uri fileUri = FileProvider.getUriForFile(getApplicationContext(),getResources().getString(R.string.file_provider_authority), myPicture);
+                i.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+                i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                i.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            } else{
+                // para versiones anteriores a android 6.0
+                Uri uri = Uri.fromFile(myPicture);
+                i.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+            }
             startActivityForResult(i, REQUEST_CODE);
             loadPicture(filepath);
         } catch (IOException e) {
+            Log.i(FOTOS, "No existe " + filepath);
             e.printStackTrace();
         }
     }
