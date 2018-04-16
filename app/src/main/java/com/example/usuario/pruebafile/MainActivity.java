@@ -141,6 +141,12 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
 
+        if (id == R.id.action_Tarea) {
+            Intent i=new Intent(this,Actividad_Tarea.class);
+            startActivity(i);
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 

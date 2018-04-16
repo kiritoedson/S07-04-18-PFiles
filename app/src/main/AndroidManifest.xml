@@ -2,9 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.usuario.pruebafile">
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"></uses-permission>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
-    <uses-permission android:name="android.permission.CAMERA"></uses-permission>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:allowBackup="true"
@@ -23,16 +23,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".PictureActivity"></activity>
+        <activity android:name=".PictureActivity" />
 
-        <provider android:name="android.support.v4.content.FileProvider"
+        <provider
+            android:name="android.support.v4.content.FileProvider"
             android:authorities="@string/file_provider_authority"
             android:exported="false"
             android:grantUriPermissions="true">
-
-            <meta-data android:name="android.support.FILE_PROVIDER_PATHS"
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
+        <activity android:name=".Actividad_Tarea" />
+        <activity android:name=".Actividad_Imagen"></activity>
     </application>
 
 </manifest>

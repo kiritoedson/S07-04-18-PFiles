@@ -12,4 +12,7 @@
         android:orderInCategory="100"
         android:title="Tomar foto"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_Tarea"
+        android:title="Tarea" />
 </menu>
